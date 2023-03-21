@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "154226857980",
+    "project_id": "watch-it-427ba",
+    "storage_bucket": "watch-it-427ba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154226857980:android:f6606f2e335767ab8c4479",
+        "android_client_info": {
+          "package_name": "com.eakcay.watchit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "154226857980-9fo6a7kij5ttas2cp708bkssl5jvolqn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgLAV1rD9Qt7oTqhLtzNp-jF5zM7Xhaf0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154226857980-9fo6a7kij5ttas2cp708bkssl5jvolqn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
