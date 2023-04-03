@@ -1,33 +1,36 @@
 package com.eakcay.watchit;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
-
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 import com.eakcay.watchit.login.LoginActivity;
-import com.eakcay.watchit.login.LoginFragment;
-import com.eakcay.watchit.ui.ProfileFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Toolbar toolbar;
     private BottomNavigationView bottomNav;
-
-    private Button buttonLogout;
     private FirebaseAuth mAuth;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -37,17 +40,45 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            // bottomNav erişimi sağladık
+            //provided bottomNav access
             bottomNav = findViewById(R.id.bottomNav);
 
-            // navHostFragment erişimi sağladık
+            // provided navHostFragment access
             NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().
                     findFragmentById(R.id.nav_host_fragment);
 
-            // yukarıdaki erişimleri sağladıktan sonra aşağıda ikisini birleştirdik
-            // artık bottomNav üzerindeki tuşlara basıldığında ilgili sayfa açılacak
+            // After providing the above accesses, we combined the two below
+            // now the relevant page will be opened when the keys on the bottomNav are pressed
             NavigationUI.setupWithNavController(bottomNav, navHostFragment.getNavController());
 
              }
+    }
+
+    // add toolbar
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    // toolbar
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.action_logout:
+                mAuth.signOut();
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                this.finish();
+                break;
+
+            case R.id.action_settins:
+                Toast.makeText(getApplicationContext(),"settings",Toast.LENGTH_SHORT).show();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
