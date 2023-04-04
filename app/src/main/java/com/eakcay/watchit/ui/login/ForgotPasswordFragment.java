@@ -1,4 +1,4 @@
-package com.eakcay.watchit.login;
+package com.eakcay.watchit.ui.login;
 
 import android.os.Bundle;
 import android.text.TextUtils;
