@@ -34,6 +34,9 @@ android {
     }
 }
 
+def retrofitVersion = '2.3.0'
+def rxJavaVersion = '2.1.1'
+
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
@@ -44,14 +47,27 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.6.1"
+   // implementation "androidx.lifecycle:lifecycle-viewmodel:2.6.1"
 
     implementation "androidx.navigation:navigation-fragment:2.5.3"
     implementation "androidx.navigation:navigation-ui:2.5.3"
 
     implementation platform('com.google.firebase:firebase-bom:31.2.3')
     implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.google.android.gms:play-services-auth:20.4.1'
+    implementation 'com.google.android.gms:play-services-auth:20.5.0'
+
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxJavaVersion"
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    implementation 'com.uwetrottmann.tmdb2:tmdb-java:2.4.0'
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+
 
 
 }

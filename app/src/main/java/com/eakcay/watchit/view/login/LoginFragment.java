@@ -1,4 +1,4 @@
-package com.eakcay.watchit.ui.login;
+package com.eakcay.watchit.view.login;
 
 import android.content.Context;
 import android.content.Intent;
