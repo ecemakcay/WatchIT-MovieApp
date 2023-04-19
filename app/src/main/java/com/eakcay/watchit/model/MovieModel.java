@@ -59,6 +59,18 @@ public class MovieModel implements Serializable {
     @Expose
     private String voteAverage;
 
+    public String getRunTime() {
+        return runTime;
+    }
+
+    public void setRunTime(String runTime) {
+        this.runTime = runTime;
+    }
+
+    @SerializedName("runtime")
+    @Expose
+    private String runTime;
+
     public String getTitle() {
         return title;
     }

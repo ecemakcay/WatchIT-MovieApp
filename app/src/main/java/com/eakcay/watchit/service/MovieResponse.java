@@ -6,19 +6,20 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+
 //This class satisfies the response from the API.
 // It contains a list, and that list contains instances of the MovieModel class.
 public class MovieResponse {
 
     @SerializedName("results")
     @Expose
-    private List<MovieModel> movieList;
+    private List<MovieModel> results;
 
-    public List<MovieModel> getMovieList() {
-        return movieList;
+    public List<MovieModel> getResults() {
+        return results;
     }
 
-    public void setMovieList(List<MovieModel> movieList) {
-        this.movieList = movieList;
+    public void setResults(List<MovieModel> results) {
+        this.results = results;
     }
 }

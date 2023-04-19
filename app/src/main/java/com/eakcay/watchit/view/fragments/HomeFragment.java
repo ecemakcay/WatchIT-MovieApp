@@ -12,12 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 
-import com.eakcay.watchit.adapter.NowPlayingMovieAdapter;
-import com.eakcay.watchit.adapter.TopRatedMovieAdapter;
-import com.eakcay.watchit.adapter.UpComingMovieAdapter;
+import com.eakcay.watchit.adapter.MovieAdapter;
 import com.eakcay.watchit.service.MovieResponse;
 import com.eakcay.watchit.R;
-import com.eakcay.watchit.adapter.PopularMovieAdapter;
 import com.eakcay.watchit.model.MovieModel;
 import com.eakcay.watchit.service.MovieAPI;
 import com.eakcay.watchit.service.RetrofitClient;
@@ -28,161 +25,154 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class HomeFragment extends Fragment {
-    private static final String API_KEY = "9fc75e7de261e9b79cf9aea98daf509f";
 
     private RecyclerView popularRV, topRatedRV, nowPlayingRV, upComingRV;
-    private PopularMovieAdapter popularMovieAdapter;
-    private TopRatedMovieAdapter topRatedMovieAdapter;
-    private NowPlayingMovieAdapter nowPlayingMovieAdapter;
-    private UpComingMovieAdapter upComingMovieAdapter;
+    private MovieAdapter popularAdapter, topRatedAdapter, nowPlayingAdapter, upComingAdapter;
+    private List<MovieModel> popularList, topRatedList, nowPlayingList, upComingList;
 
-    public HomeFragment() {
-        // Required empty public constructor
+    private static final String API_KEY = "9fc75e7de261e9b79cf9aea98daf509f";
+    private MovieAPI movieAPI;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // RetrofitClient to create an instance of the MovieAPI interface
+        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        movieAPI = retrofit.create(MovieAPI.class);
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        //popular movie RecyclerView
         popularRV = view.findViewById(R.id.popularRV);
-        popularRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
-        popularMovieAdapter = new PopularMovieAdapter(getActivity(), new ArrayList<MovieModel>());
-        popularRV.setAdapter(popularMovieAdapter);
-
-
-        //top rated movie RecyclerView
         topRatedRV = view.findViewById(R.id.topRatedRV);
-        topRatedRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
-        topRatedMovieAdapter = new TopRatedMovieAdapter(getActivity(), new ArrayList<MovieModel>());
-        topRatedRV.setAdapter(topRatedMovieAdapter);
-
-
-
-        //latest movie RecyclerView
         nowPlayingRV = view.findViewById(R.id.nowPlayingRV);
-        nowPlayingRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
-        nowPlayingMovieAdapter = new NowPlayingMovieAdapter(getActivity(), new ArrayList<MovieModel>());
-        nowPlayingRV.setAdapter(nowPlayingMovieAdapter);
-
-
-        //up coming movie RecyclerView
         upComingRV = view.findViewById(R.id.upComingRV);
-        upComingRV.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false));
-        upComingMovieAdapter = new UpComingMovieAdapter(getActivity(), new ArrayList<MovieModel>());
-        upComingRV.setAdapter(upComingMovieAdapter);
 
+        // Set layout manager and adapter for each RecyclerView
+        popularList = new ArrayList<>();
+        popularAdapter = new MovieAdapter(getContext(), popularList);
+        popularRV.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        popularRV.setAdapter(popularAdapter);
 
+        topRatedList = new ArrayList<>();
+        topRatedAdapter = new MovieAdapter(getContext(), topRatedList);
+        topRatedRV.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        topRatedRV.setAdapter(topRatedAdapter);
 
+        nowPlayingList = new ArrayList<>();
+        nowPlayingAdapter = new MovieAdapter(getContext(), nowPlayingList);
+        nowPlayingRV.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        nowPlayingRV.setAdapter(nowPlayingAdapter);
 
-        loadPopularMovie();
-        loadTopRatedMovie();
-        loadNowPlayingMovie();
-        loadUpComingMovie();
+        upComingList = new ArrayList<>();
+        upComingAdapter = new MovieAdapter(getContext(), upComingList);
+        upComingRV.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        upComingRV.setAdapter(upComingAdapter);
+
+        // Call methods to fetch data from API
+        getPopularMovies();
+        getTopRatedMovies();
+        getNowPlayingMovies();
+        getUpcomingMovies();
 
         return view;
     }
 
-
-    // Get data from TMDB API
-    public void loadPopularMovie(){
-        MovieAPI movieAPI = RetrofitClient.getRetrofitInstance().create(MovieAPI.class);
+    // Method to fetch popular movies from API
+    private void getPopularMovies() {
         Call<MovieResponse> call = movieAPI.getPopularMovies(API_KEY);
 
-        // Handle the response from API
         call.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
-                    List<MovieModel> movieList = response.body().getMovieList();
-                    popularMovieAdapter.setPopularMovieList(movieList); // Update adapter with movieList data
+                    popularList.addAll(response.body().getResults());
+                    popularAdapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(getActivity(), "Response failed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    // Method to fetch top rated movies from API
 
-    public void loadNowPlayingMovie(){
-        MovieAPI movieAPI = RetrofitClient.getRetrofitInstance().create(MovieAPI.class);
-        Call<MovieResponse> call = movieAPI.getNowPlayingMovies(API_KEY);
-
-        // Handle the response from API
-        call.enqueue(new Callback<MovieResponse>() {
-            @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                if (response.isSuccessful()) {
-                    List<MovieModel> movieList = response.body().getMovieList();
-                    nowPlayingMovieAdapter.setNowPlayingMovieList(movieList); // Update adapter with movieList data
-                } else {
-                    Toast.makeText(getActivity(), "Response failed!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void loadTopRatedMovie(){
-        MovieAPI movieAPI = RetrofitClient.getRetrofitInstance().create(MovieAPI.class);
+    private void getTopRatedMovies() {
         Call<MovieResponse> call = movieAPI.getTopRatedMovies(API_KEY);
 
-        // Handle the response from API
         call.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
-                    List<MovieModel> movieList = response.body().getMovieList();
-                    topRatedMovieAdapter.setTopRatedMovieList(movieList); // Update adapter with movieList data
+                    topRatedList.addAll(response.body().getResults());
+                    topRatedAdapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(getActivity(), "Response failed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    // Method to fetch now playing movies from API
 
-    public void loadUpComingMovie(){
-        MovieAPI movieAPI = RetrofitClient.getRetrofitInstance().create(MovieAPI.class);
-        Call<MovieResponse> call = movieAPI.getUpcomingMovies(API_KEY);
+    private void getNowPlayingMovies() {
+        Call<MovieResponse> call = movieAPI.getNowPlayingMovies(API_KEY);
 
-        // Handle the response from API
         call.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                 if (response.isSuccessful()) {
-                    List<MovieModel> movieList = response.body().getMovieList();
-                    upComingMovieAdapter.setUpcomingMovieList(movieList); // Update adapter with movieList data
+                    nowPlayingList.addAll(response.body().getResults());
+                    nowPlayingAdapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(getActivity(), "Response failed!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
 
+    private void getUpcomingMovies() {
+        Call<MovieResponse> call = movieAPI.getUpcomingMovies(API_KEY);
+
+        call.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                if (response.isSuccessful()) {
+                    upComingList.addAll(response.body().getResults());
+                    upComingAdapter.notifyDataSetChanged();
+                } else {
+                    Toast.makeText(getContext(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
