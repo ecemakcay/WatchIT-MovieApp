@@ -23,7 +23,8 @@ public class MovieAdapter extends BaseMovieAdapter<MovieModel, MovieAdapter.Movi
 
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.movie_item_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).
+                inflate(R.layout.movie_item_layout, parent, false);
         return new MovieViewHolder(view);
     }
 
@@ -44,6 +45,11 @@ public class MovieAdapter extends BaseMovieAdapter<MovieModel, MovieAdapter.Movi
             posterImageView = itemView.findViewById(R.id.poster_image_view);
             titleTextView = itemView.findViewById(R.id.title_text_view);
         }
+    }
+
+    public void setFilteredList(List<MovieModel> filteredList){
+        this.itemList=filteredList;
+        notifyDataSetChanged();
     }
 }
 

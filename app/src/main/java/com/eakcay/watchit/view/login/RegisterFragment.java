@@ -67,6 +67,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void registerUser() {
+
         // Get user inputs from EditText views
         String username = editTextUsername.getText().toString().trim();
         String email = editTextEmail.getText().toString().trim();

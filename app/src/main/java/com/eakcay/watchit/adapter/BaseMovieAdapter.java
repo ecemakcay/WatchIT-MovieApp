@@ -10,8 +10,9 @@ import com.eakcay.watchit.model.MovieModel;
 import java.util.List;
 
 
-public abstract class BaseMovieAdapter<T extends MovieModel, VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {
-
+public abstract class BaseMovieAdapter<T extends MovieModel, VH
+        extends RecyclerView.ViewHolder>
+        extends RecyclerView.Adapter<VH> {
     protected List<T> itemList;
     protected final Context context;
 

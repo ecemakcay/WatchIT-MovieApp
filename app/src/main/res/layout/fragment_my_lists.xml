@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragments.MyListsFragment">
+    tools:context=".view.fragments.MyListsFragment"
+    android:background="@color/colorPrimary">
 
     <TextView
         android:id="@+id/textView4"

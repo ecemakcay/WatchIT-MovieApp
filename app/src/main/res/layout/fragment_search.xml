@@ -5,7 +5,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.fragments.SearchFragment">
+    tools:context=".view.fragments.SearchFragment"
+    android:background="@color/colorPrimary">
 
     <SearchView
         android:id="@+id/searchView"
@@ -14,8 +15,10 @@
         android:layout_margin="3dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
-        android:queryHint="Search Here..."
+        android:foregroundTint="#FFFFFF"
         android:iconifiedByDefault="false"
+        android:queryHint="Search Here..."
+        android:background="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,7 +27,9 @@
         android:id="@+id/searchRv"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
+        android:layout_margin="5dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

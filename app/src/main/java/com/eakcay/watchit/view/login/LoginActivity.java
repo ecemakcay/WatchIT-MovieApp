@@ -14,16 +14,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 
-public class LoginActivity extends AppCompatActivity implements LoginFragment.OnForgotPasswordListener, LoginFragment.OnRegisterListener {
-
+public class LoginActivity extends AppCompatActivity implements
+        LoginFragment.OnForgotPasswordListener, LoginFragment.OnRegisterListener {
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         fragmentManager = getSupportFragmentManager();
         fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -50,7 +48,8 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.On
     // Helper method to load a fragment
     public void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frameLayout1, fragment); // Load LoginFragment to frameLayout1 by default
+        // Load LoginFragment to// frameLayout1 by default
+        transaction.replace(R.id.frameLayout1, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }

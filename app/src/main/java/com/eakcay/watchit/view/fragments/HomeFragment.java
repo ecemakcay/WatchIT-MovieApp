@@ -32,7 +32,6 @@ public class HomeFragment extends Fragment {
     private RecyclerView popularRV, topRatedRV, nowPlayingRV, upComingRV;
     private MovieAdapter popularAdapter, topRatedAdapter, nowPlayingAdapter, upComingAdapter;
     private List<MovieModel> popularList, topRatedList, nowPlayingList, upComingList;
-
     private static final String API_KEY = "9fc75e7de261e9b79cf9aea98daf509f";
     private MovieAPI movieAPI;
 
@@ -59,7 +58,8 @@ public class HomeFragment extends Fragment {
         // Set layout manager and adapter for each RecyclerView
         popularList = new ArrayList<>();
         popularAdapter = new MovieAdapter(getContext(), popularList);
-        popularRV.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        popularRV.setLayoutManager(new LinearLayoutManager(getActivity(),
+                LinearLayoutManager.HORIZONTAL, false));
         popularRV.setAdapter(popularAdapter);
 
         topRatedList = new ArrayList<>();
@@ -109,7 +109,6 @@ public class HomeFragment extends Fragment {
     }
 
     // Method to fetch top rated movies from API
-
     private void getTopRatedMovies() {
         Call<MovieResponse> call = movieAPI.getTopRatedMovies(API_KEY);
 

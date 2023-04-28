@@ -23,13 +23,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginFragment extends Fragment {
-
     private EditText editTextEmail;
     private EditText editTextPassword;
     private Button buttonLogin;
     private TextView textViewForgotPassword;
     private TextView textViewRegister;
-
     private OnForgotPasswordListener onForgotPasswordListener;
     private OnRegisterListener onRegisterListener;
 
@@ -96,6 +94,7 @@ public class LoginFragment extends Fragment {
     }
 
     private void loginUser() {
+
         // Get user inputs from EditText views
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
@@ -132,6 +131,7 @@ public class LoginFragment extends Fragment {
                         }
                     }
                 });
+
     }
 
     public interface OnForgotPasswordListener {
