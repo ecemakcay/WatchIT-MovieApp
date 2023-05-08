@@ -25,4 +25,9 @@
         android:name="com.eakcay.watchit.view.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/movieDetailFragment"
+        android:name="com.eakcay.watchit.view.fragments.MovieDetailFragment"
+        android:label="fragment_movie_detail"
+        tools:layout="@layout/fragment_movie_detail" />
 </navigation>

@@ -48,7 +48,7 @@ public class SearchFragment extends Fragment {
 
         movieList = new ArrayList<>();
         filteredList = new ArrayList<>();
-        movieAdapter = new MovieAdapter(getContext(), filteredList);
+        movieAdapter = new MovieAdapter(getActivity(), filteredList);
     }
 
     @Override

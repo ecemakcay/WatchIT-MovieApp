@@ -1,11 +1,16 @@
 package com.eakcay.watchit.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class MovieModel implements Serializable {
+public class MovieModel implements Serializable, Parcelable {
 
     @SerializedName("title")
     @Expose
@@ -26,10 +31,6 @@ public class MovieModel implements Serializable {
     @SerializedName("vote_count")
     @Expose
     private String voteCount;
-
-    @SerializedName("imdb_id")
-    @Expose
-    private String imdbId;
 
     @SerializedName("first_air_date")
     @Expose
@@ -59,17 +60,47 @@ public class MovieModel implements Serializable {
     @Expose
     private String voteAverage;
 
-    public String getRunTime() {
-        return runTime;
-    }
-
-    public void setRunTime(String runTime) {
-        this.runTime = runTime;
-    }
-
     @SerializedName("runtime")
     @Expose
-    private String runTime;
+    private int runtime;
+
+    protected MovieModel(Parcel in) {
+        title = in.readString();
+        id = in.readString();
+        name = in.readString();
+        popularity = in.readString();
+        voteCount = in.readString();
+        firstAirDate = in.readString();
+        posterPath = in.readString();
+        originalLanguage = in.readString();
+        backdropPath = in.readString();
+        overview = in.readString();
+        releaseDate = in.readString();
+        voteAverage = in.readString();
+        runtime = in.readInt();
+    }
+
+    public static final Creator<MovieModel> CREATOR = new Creator<MovieModel>() {
+        @Override
+        public MovieModel createFromParcel(Parcel in) {
+            return new MovieModel(in);
+        }
+
+        @Override
+        public MovieModel[] newArray(int size) {
+            return new MovieModel[size];
+        }
+    };
+
+    public int getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(int runtime) {
+        this.runtime = runtime;
+    }
+
+
 
     public String getTitle() {
         return title;
@@ -79,8 +110,8 @@ public class MovieModel implements Serializable {
         this.title = title;
     }
 
-    public String getId() {
-        return id;
+    public int getId() {
+        return Integer.parseInt(id);
     }
 
     public void setId(String id) {
@@ -163,13 +194,6 @@ public class MovieModel implements Serializable {
         this.releaseDate = releaseDate;
     }
 
-    public String getImdbId() {
-        return imdbId;
-    }
-
-    public void setImdbId(String imdbId) {
-        this.imdbId = imdbId;
-    }
 
     public String getVoteAverage() {
         return voteAverage;
@@ -177,5 +201,27 @@ public class MovieModel implements Serializable {
 
     public void setVoteAverage(String voteAverage) {
         this.voteAverage = voteAverage;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int i) {
+        parcel.writeString(title);
+        parcel.writeString(id);
+        parcel.writeString(name);
+        parcel.writeString(popularity);
+        parcel.writeString(voteCount);
+        parcel.writeString(firstAirDate);
+        parcel.writeString(posterPath);
+        parcel.writeString(originalLanguage);
+        parcel.writeString(backdropPath);
+        parcel.writeString(overview);
+        parcel.writeString(releaseDate);
+        parcel.writeString(voteAverage);
+        parcel.writeInt(runtime);
     }
 }

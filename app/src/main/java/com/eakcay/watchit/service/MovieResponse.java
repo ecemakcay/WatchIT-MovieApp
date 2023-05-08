@@ -22,4 +22,5 @@ public class MovieResponse {
     public void setResults(List<MovieModel> results) {
         this.results = results;
     }
+
 }

@@ -14,7 +14,7 @@ public abstract class BaseMovieAdapter<T extends MovieModel, VH
         extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<VH> {
     protected List<T> itemList;
-    protected final Context context;
+    protected Context context;
 
     public BaseMovieAdapter(Context context, List<T> itemList) {
         this.context = context;
