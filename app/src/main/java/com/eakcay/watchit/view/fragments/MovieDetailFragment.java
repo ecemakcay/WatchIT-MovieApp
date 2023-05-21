@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.eakcay.watchit.R;
 import com.eakcay.watchit.adapter.CastAdapter;
+import com.eakcay.watchit.adapter.GenreAdapter;
 import com.eakcay.watchit.model.CastModel;
+
+import com.eakcay.watchit.model.Genre;
 import com.eakcay.watchit.model.MovieModel;
 import com.eakcay.watchit.model.VideoModel;
 import com.eakcay.watchit.service.CreditsResponse;
@@ -28,6 +32,7 @@ import com.eakcay.watchit.service.VideoResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +45,11 @@ public class MovieDetailFragment extends Fragment {
     private static final String API_KEY = "9fc75e7de261e9b79cf9aea98daf509f";
     private ImageView movieDetailImg, movieCoverImg;
     private TextView tv_title, tv_description, runTime, rating, releaseDate;
-    private RecyclerView castRV;
     private List<CastModel> castList;
+    private List<Genre> genreList;
     private CastAdapter castAdapter;
+    private GenreAdapter genreAdapter;
+
     private FloatingActionButton play_fab;
     private MovieAPI movieAPI;
 
@@ -54,17 +61,24 @@ public class MovieDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
         // get reference to bottom navigation bar
-        BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottomNav);
+        BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNav);
         // hide bottom navigation bar
         bottomNavigationView.setVisibility(View.GONE);
 
         //cast recyclerView
-        castRV= view.findViewById(R.id.castRV);
+        RecyclerView castRV = view.findViewById(R.id.castRV);
         castRV.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
         castList = new ArrayList<>();
         castAdapter = new CastAdapter(getContext(), castList);
         castRV.setAdapter(castAdapter);
+
+        // genre recyclerView
+        RecyclerView genreRV = view.findViewById(R.id.genreRV);
+        genreRV.setLayoutManager(new LinearLayoutManager(getContext(),
+                LinearLayoutManager.HORIZONTAL, false));
+        genreAdapter = new GenreAdapter(getContext());
+        genreRV.setAdapter(genreAdapter);
 
         movieDetailImg = view.findViewById(R.id.detail_movie_img);
         movieCoverImg = view.findViewById(R.id.detail_movie_cover);
@@ -89,13 +103,18 @@ public class MovieDetailFragment extends Fragment {
                     if (movie != null) {
                         tv_title.setText(movie.getTitle());
                         tv_description.setText(movie.getOverview());
-                        rating.setText("Rating: " + movie.getVoteAverage());
-                        releaseDate.setText("Release Date: " + movie.getReleaseDate());
+                        double voteAverage = Double.parseDouble(movie.getVoteAverage());
+                        @SuppressLint("DefaultLocale") String formattedVoteAverage = String.format("%.1f", voteAverage);
+                        rating.setText(formattedVoteAverage);
+
+
+                        String relase =  movie.getReleaseDate();
+                        releaseDate.setText(relase.substring(0,4));
 
                         if (movie.getRuntime() != 0) {
-                            runTime.setText("Run time: " + movie.getRuntime() + " min");
+                            runTime.setText(movie.getRuntime() + " min");
                         } else {
-                            runTime.setText("Run time: N/A");
+                            runTime.setText("Run time:  N/A");
                         }
 
                         String imageUrl = "https://image.tmdb.org/t/p/w500" + movie.getPosterPath();
@@ -104,22 +123,22 @@ public class MovieDetailFragment extends Fragment {
                         Picasso.get().load(imageUrl).into(movieDetailImg);
                         Picasso.get().load(coverUrl).into(movieCoverImg);
 
-                        play_fab.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                //movie trailer
-                                getVideo();
-                            }
+                        play_fab.setOnClickListener(view1 -> {
+                            //movie trailer
+                            getVideo();
                         });
 
                         //cast
                         getCast();
 
+                        // genre
+                        genreAdapter.setGenreList(movie.getGenres());
+
                     }
                 }
 
                 @Override
-                public void onFailure(Call<MovieModel> call, Throwable t) {
+                public void onFailure(@NonNull Call<MovieModel> call, @NonNull Throwable t) {
                     Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -127,6 +146,7 @@ public class MovieDetailFragment extends Fragment {
 
         return view;
     }
+
 
     public void getVideo() {
         Bundle bundle = getArguments();
@@ -136,7 +156,7 @@ public class MovieDetailFragment extends Fragment {
             Call<VideoResponse> call = movieAPI.getVideos(movieId, API_KEY);
             call.enqueue(new Callback<VideoResponse>() {
                 @Override
-                public void onResponse(Call<VideoResponse> call, Response<VideoResponse> response) {
+                public void onResponse(@NonNull Call<VideoResponse> call, @NonNull Response<VideoResponse> response) {
                     if (response.body() != null) {
                         List<VideoModel> videoModels = response.body().getVideoList();
                         if (videoModels.size() > 0) {
@@ -152,7 +172,7 @@ public class MovieDetailFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<VideoResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<VideoResponse> call, @NonNull Throwable t) {
                     Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -179,7 +199,7 @@ public class MovieDetailFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<CreditsResponse> call, Throwable t) {
+                public void onFailure(@NonNull Call<CreditsResponse> call, @NonNull Throwable t) {
                     Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
@@ -191,7 +211,7 @@ public class MovieDetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         // get reference to bottom navigation bar
-        BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottomNav);
+        BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNav);
         // show bottom navigation bar
         bottomNavigationView.setVisibility(View.VISIBLE);
 

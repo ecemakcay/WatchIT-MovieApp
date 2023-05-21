@@ -8,7 +8,9 @@ import androidx.annotation.NonNull;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
 import java.io.Serializable;
+import java.util.List;
 
 public class MovieModel implements Serializable, Parcelable {
 
@@ -64,6 +66,11 @@ public class MovieModel implements Serializable, Parcelable {
     @Expose
     private int runtime;
 
+    @SerializedName("genres")
+    @Expose
+    private List<Genre> genres;
+
+
     protected MovieModel(Parcel in) {
         title = in.readString();
         id = in.readString();
@@ -78,6 +85,7 @@ public class MovieModel implements Serializable, Parcelable {
         releaseDate = in.readString();
         voteAverage = in.readString();
         runtime = in.readInt();
+
     }
 
     public static final Creator<MovieModel> CREATOR = new Creator<MovieModel>() {
@@ -91,6 +99,14 @@ public class MovieModel implements Serializable, Parcelable {
             return new MovieModel[size];
         }
     };
+
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<Genre> genreIds) {
+        this.genres = genreIds;
+    }
 
     public int getRuntime() {
         return runtime;

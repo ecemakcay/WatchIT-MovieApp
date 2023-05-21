@@ -21,4 +21,5 @@ public class VideoModel {
     public String getSite() {
         return site;
     }
+
 }
