@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +21,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.eakcay.watchit.R;
 import com.eakcay.watchit.adapter.CastAdapter;
 import com.eakcay.watchit.adapter.GenreAdapter;
+import com.eakcay.watchit.data.FirestoreHelper;
 import com.eakcay.watchit.model.CastModel;
 
+import com.eakcay.watchit.model.FavoriMovieModel;
 import com.eakcay.watchit.model.Genre;
 import com.eakcay.watchit.model.MovieModel;
 import com.eakcay.watchit.model.VideoModel;
@@ -46,12 +49,12 @@ public class MovieDetailFragment extends Fragment {
     private ImageView movieDetailImg, movieCoverImg;
     private TextView tv_title, tv_description, runTime, rating, releaseDate;
     private List<CastModel> castList;
-    private List<Genre> genreList;
     private CastAdapter castAdapter;
     private GenreAdapter genreAdapter;
 
     private FloatingActionButton play_fab;
     private MovieAPI movieAPI;
+    private Button btn_favori, btn_watched, btn_addList;
 
     @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
@@ -88,6 +91,9 @@ public class MovieDetailFragment extends Fragment {
         rating = view.findViewById(R.id.rating);
         runTime = view.findViewById(R.id.runTime);
         releaseDate = view.findViewById(R.id.release_date);
+        btn_favori =view.findViewById(R.id.btn_favorite);
+        btn_watched =view.findViewById(R.id.btn_watched);
+        btn_addList =view.findViewById(R.id.btn_add_list);
 
         movieAPI = RetrofitClient.getRetrofitInstance().create(MovieAPI.class);
 
@@ -133,6 +139,7 @@ public class MovieDetailFragment extends Fragment {
 
                         // genre
                         genreAdapter.setGenreList(movie.getGenres());
+
 
                     }
                 }

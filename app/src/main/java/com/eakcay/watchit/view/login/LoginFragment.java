@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 
 import com.eakcay.watchit.MainActivity;
 import com.eakcay.watchit.R;
+import com.eakcay.watchit.auth.FirebaseAuthHelper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -30,6 +31,7 @@ public class LoginFragment extends Fragment {
     private TextView textViewRegister;
     private OnForgotPasswordListener onForgotPasswordListener;
     private OnRegisterListener onRegisterListener;
+    private FirebaseAuthHelper firebaseAuthHelper;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -58,6 +60,8 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        firebaseAuthHelper = new FirebaseAuthHelper(getContext());
 
         editTextEmail = view.findViewById(R.id.editTextEmail);
         editTextPassword = view.findViewById(R.id.editTextPassword);
@@ -112,25 +116,7 @@ public class LoginFragment extends Fragment {
             return;
         }
 
-        // Authenticate user with Firebase Authentication
-        FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Handle successful login
-                            Toast.makeText(getContext(), "Login successful", Toast.LENGTH_SHORT).show();
-
-                            Intent intent = new Intent(getActivity(), MainActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
-
-                        } else {
-                            // Handle login failure
-                            Toast.makeText(getContext(), "Login failed", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        firebaseAuthHelper.loginUser(email,password);
 
     }
 

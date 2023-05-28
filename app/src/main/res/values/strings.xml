@@ -3,4 +3,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_button_description">Add</string>
+    <string name="sign_out_btn">Sign Out</string>
+    <string name="settings_btn">Settings</string>
+    <string name="watched_list">Watched Movies</string>
+    <string name="favori_list">Favori Movies</string>
 </resources>

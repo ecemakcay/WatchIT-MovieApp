@@ -10,8 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="WebViewLayout">
+        android:layout_height="wrap_content">
 
 
         <ImageView
@@ -24,17 +23,31 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/backgrounds/scenic" />
 
-        <ImageView
-            android:id="@+id/detail_movie_img"
-            android:layout_width="125dp"
-            android:layout_height="175dp"
-            android:layout_marginTop="112dp"
-            android:background="@drawable/white_rectangle_drawable"
-            app:layout_constraintEnd_toEndOf="@+id/detail_movie_cover"
-            app:layout_constraintHorizontal_bias="0.055"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/view2"
+            android:layout_width="121dp"
+            android:layout_height="198dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="104dp"
+            android:layout_marginEnd="6dp"
+            android:background="@color/colorPrimary"
+            android:elevation="12dp"
+            android:innerRadius="5dp"
+            android:shape="ring"
+            android:thicknessRatio="1.9"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.056"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/detail_movie_cover"
-            tools:src="@drawable/ic_launcher_background" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/detail_movie_img"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/ic_launcher_background" />
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
@@ -62,7 +75,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.428"
-            app:layout_constraintStart_toEndOf="@+id/detail_movie_img"
+            app:layout_constraintStart_toEndOf="@+id/view2"
             app:layout_constraintTop_toBottomOf="@+id/detail_movie_cover"
             tools:ignore="HardcodedText" />
 
@@ -95,7 +108,7 @@
             android:textColor="#FFEB3B"
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/imageView3"
-            app:layout_constraintTop_toBottomOf="@+id/detail_movie_img" />
+            app:layout_constraintTop_toBottomOf="@+id/view2" />
 
         <ImageView
             android:id="@+id/imageView3"
@@ -107,7 +120,7 @@
             android:src="@drawable/star_icon"
             app:layout_constraintEnd_toStartOf="@+id/rating"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/detail_movie_img" />
+            app:layout_constraintTop_toBottomOf="@+id/view2" />
 
         <TextView
             android:id="@+id/release_date"
@@ -179,7 +192,7 @@
             android:text="favorite"
             app:icon="@drawable/baseline_favorite_border_24"
             app:layout_constraintBottom_toTopOf="@+id/rating"
-            app:layout_constraintStart_toEndOf="@+id/detail_movie_img"
+            app:layout_constraintStart_toEndOf="@+id/view2"
             app:layout_constraintTop_toBottomOf="@+id/detail_movie_title" />
 
         <Button

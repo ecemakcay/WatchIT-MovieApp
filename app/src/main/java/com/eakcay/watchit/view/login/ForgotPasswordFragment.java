@@ -7,18 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-
 import com.eakcay.watchit.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
+import com.eakcay.watchit.auth.FirebaseAuthHelper;
 
 public class ForgotPasswordFragment extends Fragment {
-
+    private FirebaseAuthHelper firebaseAuthHelper;
     private EditText editTextEmail;
     private Button buttonResetPassword;
 
@@ -32,15 +26,14 @@ public class ForgotPasswordFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_forgot_password, container, false);
 
+        firebaseAuthHelper = new FirebaseAuthHelper(getContext());
+
         editTextEmail = view.findViewById(R.id.editTextEmail);
         buttonResetPassword = view.findViewById(R.id.buttonResetPassword);
 
-        buttonResetPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Handle reset password button click
-                resetPassword();
-            }
+        buttonResetPassword.setOnClickListener(v -> {
+            // Handle reset password button click
+            resetPassword();
         });
 
         return view;
@@ -57,21 +50,7 @@ public class ForgotPasswordFragment extends Fragment {
             return;
         }
 
-        // Send password reset email
-        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            // Handle successful password reset
-                            Toast.makeText(getContext(), "Password reset email sent", Toast.LENGTH_SHORT).show();
-                            ((LoginActivity) getActivity()).loadFragment(new LoginFragment());
+        firebaseAuthHelper.forgotPassword(email);
 
-                        } else {
-                            // Handle password reset failure
-                            Toast.makeText(getContext(), "Failed to send password reset email", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 }
