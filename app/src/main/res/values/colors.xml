@@ -12,5 +12,7 @@
     <color name="colorAccent">#f1b814</color>
     <color name="text_light_blue">#566f9a</color>
     <color name="material_dynamic_natural80">#c5c7c9</color>
+    <color name="default_button_color">#FFFFFF</color>
+    <color name="favorite_button_color">#F42714</color>
 
 </resources>

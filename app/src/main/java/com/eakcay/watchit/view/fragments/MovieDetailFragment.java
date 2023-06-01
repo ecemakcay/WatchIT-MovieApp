@@ -1,6 +1,7 @@
 package com.eakcay.watchit.view.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,24 +9,22 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.eakcay.watchit.R;
 import com.eakcay.watchit.adapter.CastAdapter;
 import com.eakcay.watchit.adapter.GenreAdapter;
 import com.eakcay.watchit.data.FirestoreHelper;
 import com.eakcay.watchit.model.CastModel;
-
-import com.eakcay.watchit.model.FavoriMovieModel;
-import com.eakcay.watchit.model.Genre;
 import com.eakcay.watchit.model.MovieModel;
 import com.eakcay.watchit.model.VideoModel;
 import com.eakcay.watchit.service.CreditsResponse;
@@ -34,27 +33,27 @@ import com.eakcay.watchit.service.RetrofitClient;
 import com.eakcay.watchit.service.VideoResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
-
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MovieDetailFragment extends Fragment {
-    private static final String API_KEY = "9fc75e7de261e9b79cf9aea98daf509f";
     private ImageView movieDetailImg, movieCoverImg;
     private TextView tv_title, tv_description, runTime, rating, releaseDate;
     private List<CastModel> castList;
     private CastAdapter castAdapter;
     private GenreAdapter genreAdapter;
-
     private FloatingActionButton play_fab;
     private MovieAPI movieAPI;
-    private Button btn_favori, btn_watched, btn_addList;
+    private ImageButton btn_favori, btn_watched, btn_addList;
+    private boolean isFavorite = false;
+    private final String favoriteMovies = "FavoriteMovies";
 
     @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
@@ -63,12 +62,12 @@ public class MovieDetailFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_movie_detail, container, false);
 
-        // get reference to bottom navigation bar
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNav);
-        // hide bottom navigation bar
         bottomNavigationView.setVisibility(View.GONE);
 
-        //cast recyclerView
+        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+
+        // Cast recyclerView
         RecyclerView castRV = view.findViewById(R.id.castRV);
         castRV.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
@@ -76,7 +75,7 @@ public class MovieDetailFragment extends Fragment {
         castAdapter = new CastAdapter(getContext(), castList);
         castRV.setAdapter(castAdapter);
 
-        // genre recyclerView
+        // Genre recyclerView
         RecyclerView genreRV = view.findViewById(R.id.genreRV);
         genreRV.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false));
@@ -91,9 +90,9 @@ public class MovieDetailFragment extends Fragment {
         rating = view.findViewById(R.id.rating);
         runTime = view.findViewById(R.id.runTime);
         releaseDate = view.findViewById(R.id.release_date);
-        btn_favori =view.findViewById(R.id.btn_favorite);
-        btn_watched =view.findViewById(R.id.btn_watched);
-        btn_addList =view.findViewById(R.id.btn_add_list);
+        btn_favori = view.findViewById(R.id.btn_favorite);
+        btn_watched = view.findViewById(R.id.btn_watched);
+        btn_addList = view.findViewById(R.id.btn_add_list);
 
         movieAPI = RetrofitClient.getRetrofitInstance().create(MovieAPI.class);
 
@@ -101,7 +100,7 @@ public class MovieDetailFragment extends Fragment {
         if (bundle != null) {
             int movieId = bundle.getInt("movie");
 
-            Call<MovieModel> call = movieAPI.getMovieDetails(movieId, API_KEY);
+            Call<MovieModel> call = movieAPI.getMovieDetails(movieId);
             call.enqueue(new Callback<MovieModel>() {
                 @Override
                 public void onResponse(@NonNull Call<MovieModel> call, @NonNull Response<MovieModel> response) {
@@ -113,9 +112,8 @@ public class MovieDetailFragment extends Fragment {
                         @SuppressLint("DefaultLocale") String formattedVoteAverage = String.format("%.1f", voteAverage);
                         rating.setText(formattedVoteAverage);
 
-
-                        String relase =  movie.getReleaseDate();
-                        releaseDate.setText(relase.substring(0,4));
+                        String release = movie.getReleaseDate();
+                        releaseDate.setText(release.substring(0, 4));
 
                         if (movie.getRuntime() != 0) {
                             runTime.setText(movie.getRuntime() + " min");
@@ -130,16 +128,24 @@ public class MovieDetailFragment extends Fragment {
                         Picasso.get().load(coverUrl).into(movieCoverImg);
 
                         play_fab.setOnClickListener(view1 -> {
-                            //movie trailer
+                            // Movie trailer
                             getVideo();
                         });
-
-                        //cast
+                        // Cast
                         getCast();
 
-                        // genre
+                        // Genre
                         genreAdapter.setGenreList(movie.getGenres());
 
+                        checkFavoriteStatus(userId,movie);
+
+                        btn_favori.setOnClickListener(view12 -> {
+                            if (!isFavorite) {
+                                addMovieToFavorites(userId,movie);
+                            } else {
+                                removeMovieFromFavorites(userId,movie);
+                            }
+                        });
 
                     }
                 }
@@ -155,12 +161,53 @@ public class MovieDetailFragment extends Fragment {
     }
 
 
+    private void addMovieToFavorites(String userId, MovieModel movie) {
+        FirestoreHelper firestoreHelper = new FirestoreHelper();
+        firestoreHelper.addMovie(userId, movie,favoriteMovies);
+        // Update the favorite status and button color after adding the movie
+        isFavorite = true;
+        btn_favori.setBackgroundResource(R.drawable.favorite_red);
+
+
+    }
+
+    private void checkFavoriteStatus(String userId, MovieModel movie) {
+
+        FirestoreHelper firestoreHelper = new FirestoreHelper();
+        firestoreHelper.checkMovie(userId,movie.getId(),favoriteMovies,
+                new FirestoreHelper.CheckMovieListener() {
+            @Override
+            public void onMovieFound() {
+                // movie added to favorities
+                isFavorite = true;
+                Log.d("Favori true", String.valueOf(isFavorite));
+                btn_favori.setBackgroundResource(R.drawable.favorite_red);
+            }
+            @Override
+            public void onMovieNotFound() {
+                isFavorite = false;
+                Log.d("Favori false", String.valueOf(isFavorite));
+                btn_favori.setBackgroundResource(R.drawable.favorite_default);
+            }
+        });
+    }
+
+    private void removeMovieFromFavorites(String userId, MovieModel movieModel) {
+        FirestoreHelper firestoreHelper = new FirestoreHelper();
+        firestoreHelper.removeMovie(userId,movieModel.getId(),favoriteMovies);
+
+        // Update the favorite status and button color after removing the movie
+        isFavorite = false;
+        btn_favori.setBackgroundResource(R.drawable.favorite_default);
+
+    }
+
     public void getVideo() {
         Bundle bundle = getArguments();
         if (bundle != null) {
             int movieId = bundle.getInt("movie");
 
-            Call<VideoResponse> call = movieAPI.getVideos(movieId, API_KEY);
+            Call<VideoResponse> call = movieAPI.getVideos(movieId);
             call.enqueue(new Callback<VideoResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<VideoResponse> call, @NonNull Response<VideoResponse> response) {
@@ -186,13 +233,12 @@ public class MovieDetailFragment extends Fragment {
         }
     }
 
-
     public void getCast() {
         Bundle bundle = getArguments();
         if (bundle != null) {
             int movieId = bundle.getInt("movie");
 
-            Call<CreditsResponse> castCall = movieAPI.getCredits(movieId, API_KEY);
+            Call<CreditsResponse> castCall = movieAPI.getCredits(movieId);
             castCall.enqueue(new Callback<CreditsResponse>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
@@ -210,18 +256,15 @@ public class MovieDetailFragment extends Fragment {
                     Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
-
         }
     }
 
 
     @Override
     public void onDestroyView() {
-        // get reference to bottom navigation bar
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNav);
-        // show bottom navigation bar
         bottomNavigationView.setVisibility(View.VISIBLE);
-
         super.onDestroyView();
     }
 }
+

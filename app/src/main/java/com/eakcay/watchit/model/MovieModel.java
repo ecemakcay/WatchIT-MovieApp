@@ -20,31 +20,11 @@ public class MovieModel implements Serializable, Parcelable {
 
     @SerializedName("id")
     @Expose
-    private String id;
-
-    @SerializedName("name")
-    @Expose
-    private String name;
-
-    @SerializedName("popularity")
-    @Expose
-    private String popularity;
-
-    @SerializedName("vote_count")
-    @Expose
-    private String voteCount;
-
-    @SerializedName("first_air_date")
-    @Expose
-    private String firstAirDate;
+    private int id;
 
     @SerializedName("poster_path")
     @Expose
     private String posterPath;
-
-    @SerializedName("original_language")
-    @Expose
-    private String originalLanguage;
 
     @SerializedName("backdrop_path")
     @Expose
@@ -70,16 +50,13 @@ public class MovieModel implements Serializable, Parcelable {
     @Expose
     private List<Genre> genres;
 
+    public MovieModel() {
+    }
 
-    protected MovieModel(Parcel in) {
+    public MovieModel(Parcel in) {
         title = in.readString();
-        id = in.readString();
-        name = in.readString();
-        popularity = in.readString();
-        voteCount = in.readString();
-        firstAirDate = in.readString();
+        id = in.readInt();
         posterPath = in.readString();
-        originalLanguage = in.readString();
         backdropPath = in.readString();
         overview = in.readString();
         releaseDate = in.readString();
@@ -127,43 +104,11 @@ public class MovieModel implements Serializable, Parcelable {
     }
 
     public int getId() {
-        return Integer.parseInt(id);
+        return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPopularity() {
-        return popularity;
-    }
-
-    public void setPopularity(String popularity) {
-        this.popularity = popularity;
-    }
-
-    public String getVoteCount() {
-        return voteCount;
-    }
-
-    public void setVoteCount(String voteCount) {
-        this.voteCount = voteCount;
-    }
-
-    public String getFirstAirDate() {
-        return firstAirDate;
-    }
-
-    public void setFirstAirDate(String firstAirDate) {
-        this.firstAirDate = firstAirDate;
     }
 
     public String getPosterPath() {
@@ -174,13 +119,6 @@ public class MovieModel implements Serializable, Parcelable {
         this.posterPath = posterPath;
     }
 
-    public String getOriginalLanguage() {
-        return originalLanguage;
-    }
-
-    public void setOriginalLanguage(String originalLanguage) {
-        this.originalLanguage = originalLanguage;
-    }
 
     public String getBackdropPath() {
         return backdropPath;
@@ -227,13 +165,8 @@ public class MovieModel implements Serializable, Parcelable {
     @Override
     public void writeToParcel(@NonNull Parcel parcel, int i) {
         parcel.writeString(title);
-        parcel.writeString(id);
-        parcel.writeString(name);
-        parcel.writeString(popularity);
-        parcel.writeString(voteCount);
-        parcel.writeString(firstAirDate);
+        parcel.writeInt(id);
         parcel.writeString(posterPath);
-        parcel.writeString(originalLanguage);
         parcel.writeString(backdropPath);
         parcel.writeString(overview);
         parcel.writeString(releaseDate);

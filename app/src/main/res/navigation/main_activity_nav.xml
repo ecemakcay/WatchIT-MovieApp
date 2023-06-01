@@ -30,4 +30,9 @@
         android:name="com.eakcay.watchit.view.fragments.MovieDetailFragment"
         android:label="fragment_movie_detail"
         tools:layout="@layout/fragment_movie_detail" />
+    <fragment
+        android:id="@+id/favoriMoviesFragment"
+        android:name="com.eakcay.watchit.view.fragments.FavoriMoviesFragment"
+        android:label="fragment_favori_movies"
+        tools:layout="@layout/fragment_favori_movies" />
 </navigation>

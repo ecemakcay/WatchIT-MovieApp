@@ -182,41 +182,44 @@
             app:layout_constraintTop_toBottomOf="@+id/detail_movie_desc"
             tools:ignore="HardcodedText" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_favorite"
-            android:layout_width="58dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="28dp"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
             android:text="favorite"
-            app:icon="@drawable/baseline_favorite_border_24"
+            app:icon="@drawable/favorite_default"
             app:layout_constraintBottom_toTopOf="@+id/rating"
             app:layout_constraintStart_toEndOf="@+id/view2"
-            app:layout_constraintTop_toBottomOf="@+id/detail_movie_title" />
+            app:layout_constraintTop_toBottomOf="@+id/detail_movie_title"
+            tools:ignore="HardcodedText,SpeakableTextPresentCheck" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_add_list"
-            android:layout_width="58dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="51dp"
             android:layout_marginBottom="32dp"
             android:text="Button"
-            app:icon="@drawable/baseline_add_24"
+            tools:ignore="HardcodedText,SpeakableTextPresentCheck"
+            app:icon="@drawable/add_white"
             app:layout_constraintBottom_toTopOf="@+id/rating"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/detail_movie_title" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btn_watched"
-            android:layout_width="58dp"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
             android:layout_marginBottom="32dp"
             android:text="Button"
+            tools:ignore="HardcodedText,SpeakableTextPresentCheck"
             app:icon="@drawable/check_white"
             app:layout_constraintBottom_toTopOf="@+id/rating"
             app:layout_constraintEnd_toStartOf="@+id/btn_add_list"

@@ -122,5 +122,10 @@ public class FirebaseAuthHelper {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         return  user.getEmail();
     }
+
+    public String getUserId(){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user.getUid();
+    }
 }
 

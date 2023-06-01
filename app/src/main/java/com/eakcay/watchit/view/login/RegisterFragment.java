@@ -28,7 +28,6 @@ public class RegisterFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register, container, false);
-      //  firestoreHelper = new FirestoreHelper();
         firebaseAuthHelper = new FirebaseAuthHelper(getContext());
 
         editTextUsername = view.findViewById(R.id.editTextUsername);

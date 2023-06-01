@@ -1,8 +1,15 @@
 package com.eakcay.watchit.view.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +18,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.eakcay.watchit.R;
 import com.eakcay.watchit.auth.FirebaseAuthHelper;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Objects;
 
 
 public class ProfileFragment extends Fragment {
-
+    private AppCompatActivity activity;
     private FirebaseAuthHelper firebaseAuthHelper;
     @SuppressLint("MissingInflatedId")
     @Override
@@ -41,6 +51,18 @@ public class ProfileFragment extends Fragment {
            firebaseAuthHelper.signOut();
         });
 
+        favoriList.setOnClickListener(view12 -> {
+            if (activity != null) {
+                FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                FavoriMoviesFragment favoriMoviesFragment = new FavoriMoviesFragment();
+                transaction.replace(R.id.nav_host_fragment, favoriMoviesFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+
         userName.setText(firebaseAuthHelper.getUserName());
         email.setText(firebaseAuthHelper.getUserEmail());
 
@@ -48,5 +70,14 @@ public class ProfileFragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof AppCompatActivity) {
+            activity = (AppCompatActivity) context;
+        }
+    }
+
 
 }
