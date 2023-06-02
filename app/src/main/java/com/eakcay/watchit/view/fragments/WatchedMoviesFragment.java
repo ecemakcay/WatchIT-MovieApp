@@ -27,6 +27,7 @@ public class WatchedMoviesFragment extends Fragment {
     private MovieAdapter movieAdapter;
     private List<MovieModel> movieList;
     private AppCompatActivity activity;
+    private String count;
 
     @SuppressLint({"NotifyDataSetChanged", "NonConstantResourceId"})
     @Override

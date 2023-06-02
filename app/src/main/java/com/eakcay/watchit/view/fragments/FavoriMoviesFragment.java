@@ -40,7 +40,7 @@ public class FavoriMoviesFragment extends Fragment {
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNav);
 
         // Set the listener for item clicks
-        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+        bottomNavigationView.setOnItemSelectedListener(item -> {
 
             FragmentManager fragmentManager = activity.getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();

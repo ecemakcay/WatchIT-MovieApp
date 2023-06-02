@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+
 import io.reactivex.annotations.NonNull;
 
 public class FirestoreHelper {
@@ -120,6 +122,53 @@ public class FirestoreHelper {
                 });
     }
 
+    public void getRuntime(String userId, GetRuntimeListener listener) {
+        firestore.collection("Users")
+                .document(userId)
+                .collection("WatchedMovies")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<String> runtimes = new ArrayList<>();
+                    int totalRuntime = 0;
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        MovieModel movie = document.toObject(MovieModel.class);
+                        runtimes.add(String.valueOf(Objects.requireNonNull(movie).getRuntime()));
+                        totalRuntime += movie.getRuntime();
+                    }
+                    listener.onMoviesRuntime(totalRuntime);
+                })
+                .addOnFailureListener(e -> {
+                    listener.onFailure(e);
+                    Log.e("FirestoreHelper", "Error getting documents: ", e);
+                });
+    }
+
+
+    public void getWatchedCount(String userId,GetCountListener listener) {
+        firestore.collection("Users")
+                .document(userId)
+                .collection("WatchedMovies")
+                .get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        String count = String.valueOf(task.getResult().size());
+                        listener.onMoviesCounted(count);
+                        Log.d("FirestoreHelper", task.getResult().size() + "");
+                    } else {
+                        listener.onFailure(task.getException());
+                        Log.d("FirestoreHelper", "Error getting documents: ", task.getException());
+                    }
+                });
+
+    }
+
+    public interface GetCountListener{
+        void onMoviesCounted(String count);
+        void onFailure(@NonNull Exception e);
+    }
+    public interface GetRuntimeListener{
+        void onMoviesRuntime(int totalRuntime);
+        void onFailure(@NonNull Exception e);
+    }
     public interface GetMoviesListener{
         void onMoviesLoaded(List<MovieModel> favoriteMovies);
         void onFailure(@NonNull Exception e);
