@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import java.util.Objects;
+
 public class FirebaseAuthHelper {
 
     private final Context context;
@@ -115,17 +117,17 @@ public class FirebaseAuthHelper {
 
     public String getUserName(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-       return  user.getDisplayName();
+       return  Objects.requireNonNull(user).getDisplayName();
     }
 
     public String getUserEmail(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        return  user.getEmail();
+        return  Objects.requireNonNull(user).getEmail();
     }
 
     public String getUserId(){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        return user.getUid();
+        return Objects.requireNonNull(user).getUid();
     }
 }
 

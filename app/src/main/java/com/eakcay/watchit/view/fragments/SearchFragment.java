@@ -90,7 +90,6 @@ public class SearchFragment extends Fragment {
 
 
     // Method to fetch movies from API
-
     private void getMovies(String text) {
 
         Call<MovieResponse> call = movieAPI.searchMovies(text);

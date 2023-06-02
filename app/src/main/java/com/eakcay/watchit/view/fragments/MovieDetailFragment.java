@@ -53,7 +53,9 @@ public class MovieDetailFragment extends Fragment {
     private MovieAPI movieAPI;
     private ImageButton btn_favori, btn_watched, btn_addList;
     private boolean isFavorite = false;
+    private boolean isWatched = false;
     private final String favoriteMovies = "FavoriteMovies";
+    private final String watchedMovies = "WatchedMovies";
 
     @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
@@ -138,12 +140,21 @@ public class MovieDetailFragment extends Fragment {
                         genreAdapter.setGenreList(movie.getGenres());
 
                         checkFavoriteStatus(userId,movie);
+                        checkWatchedStatus(userId,movie);
 
                         btn_favori.setOnClickListener(view12 -> {
                             if (!isFavorite) {
                                 addMovieToFavorites(userId,movie);
                             } else {
                                 removeMovieFromFavorites(userId,movie);
+                            }
+                        });
+
+                        btn_watched.setOnClickListener(view12 -> {
+                            if (!isWatched) {
+                                addMovieToWatched(userId,movie);
+                            } else {
+                                removeMovieFromWatched(userId,movie);
                             }
                         });
 
@@ -160,7 +171,46 @@ public class MovieDetailFragment extends Fragment {
         return view;
     }
 
+    private void addMovieToWatched(String userId, MovieModel movie) {
+        FirestoreHelper firestoreHelper = new FirestoreHelper();
+        firestoreHelper.addMovie(userId, movie,watchedMovies);
+        // Update the favorite status and button color after adding the movie
+        isWatched = true;
+        btn_watched.setBackgroundResource(R.drawable.check_yellow);
 
+
+    }
+
+    private void checkWatchedStatus(String userId, MovieModel movie) {
+
+        FirestoreHelper firestoreHelper = new FirestoreHelper();
+        firestoreHelper.checkMovie(userId,movie.getId(),watchedMovies,
+                new FirestoreHelper.CheckMovieListener() {
+                    @Override
+                    public void onMovieFound() {
+                        // movie added to favorities
+                        isWatched = true;
+                        Log.d("Favori true", String.valueOf(isWatched));
+                        btn_watched.setBackgroundResource(R.drawable.check_yellow);
+                    }
+                    @Override
+                    public void onMovieNotFound() {
+                        isWatched = false;
+                        Log.d("Favori false", String.valueOf(isWatched));
+                        btn_watched.setBackgroundResource(R.drawable.check_white);
+                    }
+                });
+    }
+
+    private void removeMovieFromWatched(String userId, MovieModel movieModel) {
+        FirestoreHelper firestoreHelper = new FirestoreHelper();
+        firestoreHelper.removeMovie(userId,movieModel.getId(),watchedMovies);
+
+        // Update the favorite status and button color after removing the movie
+        isWatched = false;
+        btn_watched.setBackgroundResource(R.drawable.check_white);
+
+    }
     private void addMovieToFavorites(String userId, MovieModel movie) {
         FirestoreHelper firestoreHelper = new FirestoreHelper();
         firestoreHelper.addMovie(userId, movie,favoriteMovies);

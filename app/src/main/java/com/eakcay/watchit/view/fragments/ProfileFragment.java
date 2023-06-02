@@ -62,6 +62,17 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        watchedList.setOnClickListener(view12 -> {
+            if (activity != null) {
+                FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                WatchedMoviesFragment watchedMoviesFragment = new WatchedMoviesFragment();
+                transaction.replace(R.id.nav_host_fragment, watchedMoviesFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
 
         userName.setText(firebaseAuthHelper.getUserName());
         email.setText(firebaseAuthHelper.getUserEmail());
