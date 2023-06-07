@@ -1,6 +1,7 @@
 package com.eakcay.watchit.data;
 
 import android.util.Log;
+
 import com.eakcay.watchit.model.MovieModel;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -18,7 +19,6 @@ public class FirestoreHelper {
     private final FirebaseFirestore firestore;
 
 
-
     public FirestoreHelper() {
         firestore = FirebaseFirestore.getInstance();
     }
@@ -31,11 +31,10 @@ public class FirestoreHelper {
 
         movieDocumentReference.set(movie)
                 .addOnSuccessListener(aVoid ->
-                        Log.d("FirestoreHelper", "Movie added successfully."))
+                        Log.d("FirestoreHelper", "Movie added successfully: "+movieList))
                 .addOnFailureListener(e ->
-                        Log.e("FirestoreHelper", "Error adding movie: " + e.getMessage()));
+                        Log.e("FirestoreHelper", "Error adding "+movieList+" movie: " + e.getMessage()));
     }
-
 
 
     public void removeMovie(String userId, int movieId,String movieList) {
@@ -47,13 +46,13 @@ public class FirestoreHelper {
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                        // Favori film belgesini sil
+
                         document.getReference().delete()
                                 .addOnSuccessListener(aVoid ->
-                                        Log.d("FirestoreHelper", "Favorite movie deleted. ID: "
+                                        Log.d("FirestoreHelper", movieList+" movie deleted. ID: "
                                         + document.getId()))
                                 .addOnFailureListener(e ->
-                                        Log.e("FirestoreHelper", "Error deleting favorite movie: "
+                                        Log.e("FirestoreHelper", "Error deleting "+movieList+" movie: "
                                         + e.getMessage()));
                     }
                 })
@@ -76,10 +75,8 @@ public class FirestoreHelper {
                         listener.onMovieNotFound();
                     }
                 })
-                .addOnFailureListener(e -> {
-                    // Firestore sorgusu sırasında hata oluştu
-                    Log.e("FirestoreHelper", "Error querying movie: " + e.getMessage());
-                });
+                .addOnFailureListener(e ->
+                        Log.e("FirestoreHelper", "Error querying movie: " + e.getMessage()));
     }
 
     public interface CheckMovieListener {
@@ -161,6 +158,7 @@ public class FirestoreHelper {
 
     }
 
+
     public interface GetCountListener{
         void onMoviesCounted(String count);
         void onFailure(@NonNull Exception e);
@@ -170,9 +168,10 @@ public class FirestoreHelper {
         void onFailure(@NonNull Exception e);
     }
     public interface GetMoviesListener{
-        void onMoviesLoaded(List<MovieModel> favoriteMovies);
+        void onMoviesLoaded(List<MovieModel> movies);
         void onFailure(@NonNull Exception e);
     }
+
 
 }
 

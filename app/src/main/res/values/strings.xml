@@ -7,6 +7,6 @@
     <string name="settings_btn">Settings</string>
     <string name="watched_list">Watched Movies</string>
     <string name="favori_list">Favori Movies</string>
-    <string name="movie_count">Movie Count: </string>
-    <string name="movie_time">Movie Time: </string>
+    <string name="movie_count">Movie Count</string>
+    <string name="movie_time">Movie Time</string>
 </resources>

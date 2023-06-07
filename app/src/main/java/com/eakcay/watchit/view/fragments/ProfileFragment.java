@@ -1,6 +1,7 @@
 package com.eakcay.watchit.view.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;

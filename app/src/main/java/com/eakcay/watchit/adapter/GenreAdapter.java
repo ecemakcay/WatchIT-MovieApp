@@ -56,7 +56,7 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.GenreViewHol
 
         public GenreViewHolder(@NonNull View itemView) {
             super(itemView);
-            genreTextView = itemView.findViewById(R.id.genreTextView);
+            genreTextView = itemView.findViewById(R.id.list_name);
         }
     }
 }

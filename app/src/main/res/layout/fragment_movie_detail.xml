@@ -57,7 +57,6 @@
             android:clickable="true"
             android:contentDescription="TODO"
             android:src="@drawable/ic_play_arrow_black_24dp"
-            android:background="@drawable/white_rectangle_drawable"
             app:layout_constraintBottom_toBottomOf="@+id/detail_movie_cover"
             app:layout_constraintEnd_toEndOf="@+id/detail_movie_cover"
             app:layout_constraintHorizontal_bias="0.567"
@@ -153,8 +152,8 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/castRV"
-            android:layout_width="343dp"
-            android:layout_height="wrap_content"
+            android:layout_width="363dp"
+            android:layout_height="285dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"

@@ -1,7 +1,6 @@
 package com.eakcay.watchit.view.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -14,10 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.eakcay.watchit.R;
@@ -38,7 +34,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,8 +49,12 @@ public class MovieDetailFragment extends Fragment {
     private ImageButton btn_favori, btn_watched, btn_addList;
     private boolean isFavorite = false;
     private boolean isWatched = false;
+    private boolean isInList = false;
     private final String favoriteMovies = "FavoriteMovies";
     private final String watchedMovies = "WatchedMovies";
+    private final String userList = "UserList";
+    private String userId;
+    FirestoreHelper firestoreHelper = new FirestoreHelper();
 
     @SuppressLint({"MissingInflatedId", "SetTextI18n"})
     @Override
@@ -67,7 +66,7 @@ public class MovieDetailFragment extends Fragment {
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNav);
         bottomNavigationView.setVisibility(View.GONE);
 
-        String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         // Cast recyclerView
         RecyclerView castRV = view.findViewById(R.id.castRV);
@@ -97,6 +96,9 @@ public class MovieDetailFragment extends Fragment {
         btn_addList = view.findViewById(R.id.btn_add_list);
 
         movieAPI = RetrofitClient.getRetrofitInstance().create(MovieAPI.class);
+        btn_addList.setBackgroundResource(R.drawable.add_white);
+        btn_watched.setBackgroundResource(R.drawable.check_white);
+        btn_favori.setBackgroundResource(R.drawable.favorite_default);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -141,6 +143,7 @@ public class MovieDetailFragment extends Fragment {
 
                         checkFavoriteStatus(userId,movie);
                         checkWatchedStatus(userId,movie);
+                        checkListStatus(userId,movie);
 
                         btn_favori.setOnClickListener(view12 -> {
                             if (!isFavorite) {
@@ -158,6 +161,14 @@ public class MovieDetailFragment extends Fragment {
                             }
                         });
 
+                        btn_addList.setOnClickListener(view12 -> {
+                            if (!isInList) {
+                                addMovieToList(userId,movie);
+                            } else {
+                                removeMovieFromList(userId,movie);
+                            }
+                        });
+
                     }
                 }
 
@@ -172,9 +183,9 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void addMovieToWatched(String userId, MovieModel movie) {
-        FirestoreHelper firestoreHelper = new FirestoreHelper();
+
         firestoreHelper.addMovie(userId, movie,watchedMovies);
-        // Update the favorite status and button color after adding the movie
+        // Update the watched status and button color after adding the movie
         isWatched = true;
         btn_watched.setBackgroundResource(R.drawable.check_yellow);
 
@@ -183,38 +194,39 @@ public class MovieDetailFragment extends Fragment {
 
     private void checkWatchedStatus(String userId, MovieModel movie) {
 
-        FirestoreHelper firestoreHelper = new FirestoreHelper();
+
         firestoreHelper.checkMovie(userId,movie.getId(),watchedMovies,
                 new FirestoreHelper.CheckMovieListener() {
                     @Override
                     public void onMovieFound() {
-                        // movie added to favorities
+                        // movie added to Watched
                         isWatched = true;
-                        Log.d("Favori true", String.valueOf(isWatched));
+                        Log.d("Watched true", String.valueOf(isWatched));
                         btn_watched.setBackgroundResource(R.drawable.check_yellow);
                     }
                     @Override
                     public void onMovieNotFound() {
                         isWatched = false;
-                        Log.d("Favori false", String.valueOf(isWatched));
+                        Log.d("Watched false", String.valueOf(isWatched));
                         btn_watched.setBackgroundResource(R.drawable.check_white);
                     }
                 });
     }
 
     private void removeMovieFromWatched(String userId, MovieModel movieModel) {
-        FirestoreHelper firestoreHelper = new FirestoreHelper();
+
         firestoreHelper.removeMovie(userId,movieModel.getId(),watchedMovies);
 
-        // Update the favorite status and button color after removing the movie
+        // Update the watched status and button color after removing the movie
         isWatched = false;
         btn_watched.setBackgroundResource(R.drawable.check_white);
 
     }
+
     private void addMovieToFavorites(String userId, MovieModel movie) {
-        FirestoreHelper firestoreHelper = new FirestoreHelper();
+
         firestoreHelper.addMovie(userId, movie,favoriteMovies);
-        // Update the favorite status and button color after adding the movie
+        // Update the watched status and button color after adding the movie
         isFavorite = true;
         btn_favori.setBackgroundResource(R.drawable.favorite_red);
 
@@ -249,6 +261,46 @@ public class MovieDetailFragment extends Fragment {
         // Update the favorite status and button color after removing the movie
         isFavorite = false;
         btn_favori.setBackgroundResource(R.drawable.favorite_default);
+
+    }
+
+    private void addMovieToList(String userId, MovieModel movie) {
+
+        firestoreHelper.addMovie(userId, movie,userList);
+        // Update the userList status and button color after adding the movie
+        isInList = true;
+        btn_addList.setBackgroundResource(R.drawable.save_icon);
+
+
+    }
+
+    private void checkListStatus(String userId, MovieModel movie) {
+
+        firestoreHelper.checkMovie(userId,movie.getId(),userList,
+                new FirestoreHelper.CheckMovieListener() {
+                    @Override
+                    public void onMovieFound() {
+                        // movie added to userList
+                        isInList = true;
+                        Log.d("User List true", String.valueOf(isInList));
+                        btn_addList.setBackgroundResource(R.drawable.save_icon);
+                    }
+                    @Override
+                    public void onMovieNotFound() {
+                        isInList = false;
+                        Log.d("User List false", String.valueOf(isInList));
+                        btn_addList.setBackgroundResource(R.drawable.add_white);
+                    }
+                });
+    }
+
+    private void removeMovieFromList(String userId, MovieModel movieModel) {
+
+        firestoreHelper.removeMovie(userId,movieModel.getId(),userList);
+
+        // Update the userList status and button color after removing the movie
+        isInList = false;
+        btn_addList.setBackgroundResource(R.drawable.add_white);
 
     }
 
@@ -308,7 +360,6 @@ public class MovieDetailFragment extends Fragment {
             });
         }
     }
-
 
     @Override
     public void onDestroyView() {

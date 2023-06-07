@@ -35,7 +35,7 @@ public class WatchedMoviesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_watched_movies, container, false);
-        RecyclerView favoriRV = view.findViewById(R.id.watched_movie_RV);
+        RecyclerView favoriRV = view.findViewById(R.id.user_movie_RV);
 
         // Get reference to the BottomNavigationView
         BottomNavigationView bottomNavigationView = requireActivity().findViewById(R.id.bottomNav);

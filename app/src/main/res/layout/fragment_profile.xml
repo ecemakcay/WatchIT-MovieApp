@@ -15,139 +15,225 @@
         android:layout_height="wrap_content">
 
 
-        <LinearLayout
-            android:id="@+id/linearLayout3"
-            android:layout_width="406dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="212dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraitLayout2"
+            android:layout_width="396dp"
+            android:layout_height="132dp"
+            android:layout_marginTop="230dp"
+            android:layout_marginBottom="8dp"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.4"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
-
-            <TextView
-                android:id="@+id/movie_text"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_weight="1"
-                android:background="@color/material_dynamic_natural80"
-                android:gravity="center"
-                android:text="@string/movie_count"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/movie_time_text"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_weight="1"
-                android:background="@color/material_dynamic_natural80"
-                android:gravity="center"
-                android:text="@string/movie_time"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="406dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="312dp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.4"
+            app:layout_constraintHorizontal_bias="0.466"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/count_movie_text"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_weight="1"
-                android:background="@color/material_dynamic_natural80"
-                android:gravity="center"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/total_movie_time_text"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:layout_weight="1"
-                android:background="@color/material_dynamic_natural80"
-                android:gravity="center"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView2"
+                android:layout_width="140dp"
+                android:layout_height="95dp"
+                android:layout_marginStart="32dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.432">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/count_text"
+                        android:layout_width="140dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorPrimaryDark"
+                        android:gravity="center"
+                        android:text="@string/movie_count"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+
+                        app:layout_constraintBottom_toTopOf="@+id/count_movie_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/count_movie_text"
+                        android:layout_width="140dp"
+                        android:layout_height="45dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorPrimaryDark"
+                        android:gravity="center"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/count_text" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="140dp"
+                android:layout_height="95dp"
+                android:layout_marginEnd="32dp"
+                app:cardCornerRadius="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/runtime_text"
+                        android:layout_width="140dp"
+                        android:layout_height="50dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorPrimaryDark"
+                        android:gravity="center"
+                        android:text="@string/movie_time"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/total_movie_time_text"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/total_movie_time_text"
+                        android:layout_width="140dp"
+                        android:layout_height="45dp"
+                        android:layout_weight="1"
+                        android:background="@color/colorPrimaryDark"
+                        android:gravity="center"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/runtime_text" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
             android:layout_height="268dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/constraitLayout2"
             app:layout_constraintVertical_bias="0.0">
 
-            <Button
-                android:id="@+id/watched_list_btn"
-                android:layout_width="237dp"
-                android:layout_height="51dp"
-                android:layout_marginBottom="1dp"
-                android:layout_weight="1"
-                android:text="@string/watched_list" />
 
-            <Button
-                android:id="@+id/favori_list_btn"
-                android:layout_width="237dp"
-                android:layout_height="51dp"
-                android:layout_marginTop="16dp"
-                android:text="@string/favori_list"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/favori_list_btn" />
-
-            <Button
-                android:id="@+id/settings_btn"
-                android:layout_width="237dp"
-                android:layout_height="51dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/settings_btn" />
-
-            <Button
-                android:id="@+id/sign_out_btn2"
-                android:layout_width="237dp"
-                android:layout_height="51dp"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:text="@string/sign_out_btn" />
+                app:layout_constraintTop_toTopOf="parent">
 
 
-        </LinearLayout>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimaryDark">
+
+
+                    <Button
+                        android:id="@+id/favori_list_btn"
+
+                        android:layout_width="227dp"
+                        android:layout_height="54dp"
+                        android:background="@drawable/profile_buttons_drawable"
+                        android:text="@string/favori_list"
+                        app:icon="@drawable/favorite_default"
+                        app:layout_constraintBottom_toTopOf="@+id/settings_btn"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/watched_list_btn" />
+
+                    <Button
+                        android:id="@+id/settings_btn"
+                        android:layout_width="227dp"
+                        android:layout_height="54dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/profile_buttons_drawable"
+                        android:text="@string/settings_btn"
+                        app:icon="@drawable/settings"
+                        app:layout_constraintBottom_toTopOf="@+id/sign_out_btn2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/favori_list_btn" />
+
+                    <Button
+                        android:id="@+id/sign_out_btn2"
+                        android:layout_width="227dp"
+                        android:layout_height="54dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/profile_buttons_drawable"
+                        android:text="@string/sign_out_btn"
+                        app:icon="@drawable/logout"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <Button
+                        android:id="@+id/watched_list_btn"
+                        android:layout_width="227dp"
+                        android:layout_height="54dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/profile_buttons_drawable"
+                        android:text="@string/watched_list"
+                        android:textColor="@android:color/white"
+                        app:icon="@drawable/check_white"
+                        app:layout_constraintBottom_toTopOf="@+id/favori_list_btn"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/view"
             android:layout_width="90dp"
             android:layout_height="105dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             android:background="@color/colorPrimary"
             android:elevation="12dp"
             android:innerRadius="0dp"
@@ -176,11 +262,11 @@
             android:id="@+id/user_name_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="33dp"
-            android:textColor="#FFFFFF"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/teal_200"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view" />
 

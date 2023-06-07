@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -35,6 +36,7 @@ public class MovieAdapter extends BaseMovieAdapter<MovieModel, MovieAdapter.Movi
     }
 
 
+    @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).
@@ -63,26 +65,23 @@ public class MovieAdapter extends BaseMovieAdapter<MovieModel, MovieAdapter.Movi
             titleTextView = itemView.findViewById(R.id.name);
             context = itemView.getContext();
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (activity == null) {
-                        Toast.makeText(context, "Activity is null", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    MovieModel movie = itemList.get(getAbsoluteAdapterPosition());
-                    Bundle bundle = new Bundle();
-                    bundle.putInt("movie", movie.getId());
-                    FragmentManager fragmentManager = activity.getSupportFragmentManager();
-                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                    MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
-                    movieDetailFragment.setArguments(bundle);
-                    fragmentTransaction.replace(R.id.fragment_container, movieDetailFragment);
-                    fragmentTransaction.addToBackStack(null);
-                    fragmentTransaction.commit();
-
+            itemView.setOnClickListener(view -> {
+                if (activity == null) {
+                    Toast.makeText(context, "Activity is null", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
+                MovieModel movie = itemList.get(getAbsoluteAdapterPosition());
+                Bundle bundle = new Bundle();
+                bundle.putInt("movie", movie.getId());
+                FragmentManager fragmentManager = activity.getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                MovieDetailFragment movieDetailFragment = new MovieDetailFragment();
+                movieDetailFragment.setArguments(bundle);
+                fragmentTransaction.replace(R.id.fragment_container, movieDetailFragment);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+
             });
 
         }
