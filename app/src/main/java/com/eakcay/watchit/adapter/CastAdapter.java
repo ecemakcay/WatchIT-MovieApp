@@ -18,8 +18,8 @@ import java.util.List;
 import io.reactivex.annotations.NonNull;
 
 public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastViewHolder> {
-    private Context context;
-    private List<CastModel> castList;
+    private final Context context;
+    private final List<CastModel> castList;
 
     public CastAdapter(Context context, List<CastModel> castList) {
         this.context = context;
