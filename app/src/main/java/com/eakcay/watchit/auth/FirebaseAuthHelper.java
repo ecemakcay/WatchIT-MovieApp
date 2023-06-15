@@ -2,19 +2,16 @@ package com.eakcay.watchit.auth;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.widget.Toast;
 import com.eakcay.watchit.MainActivity;
 import com.eakcay.watchit.data.FirestoreHelper;
 import com.eakcay.watchit.view.login.LoginActivity;
 import com.eakcay.watchit.view.login.LoginFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.Objects;
 
 public class FirebaseAuthHelper {
@@ -141,6 +138,7 @@ public class FirebaseAuthHelper {
                 .setDisplayName(newUserName)
                 .build();
 
+        assert user != null;
         user.updateProfile(profileUpdates)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -153,24 +151,38 @@ public class FirebaseAuthHelper {
                 });
     }
 
-    public void updateEmail(String email) {
+    public void updateEmail(String email, String password) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        user.updateEmail(email)
+        assert user != null;
+        String currentEmail = user.getEmail(); // Mevcut e-posta adresini al
+
+        assert currentEmail != null;
+        AuthCredential credential = EmailAuthProvider.getCredential(currentEmail, password);
+        user.reauthenticate(credential)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
+                        user.updateEmail(email)
+                                .addOnCompleteListener(updateTask -> {
+                                    if (updateTask.isSuccessful()) {
+                                        Toast.makeText(context, "User email updated", Toast.LENGTH_SHORT).show();
 
-                        Toast.makeText(context, "User email updated", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(context, "User email update error", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                     } else {
-
-                        Toast.makeText(context, "User email update error", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Authentication error. Please enter correct password.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
+
     public void updatePassword(String currentPassword, String newPassword) {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        assert user != null;
         String email = user.getEmail();
+        assert email != null;
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, currentPassword)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -197,9 +209,9 @@ public class FirebaseAuthHelper {
         FirebaseAuth.getInstance().signOut();
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
+        assert user != null;
         user.delete();
     }
-
 
 }
 

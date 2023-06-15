@@ -98,16 +98,16 @@ public class ProfileFragment extends Fragment {
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
                         builder1.setTitle("Update email");
 
-
                         LayoutInflater layoutInflater1 = requireActivity().getLayoutInflater();
                         View dialogView1 = layoutInflater1.inflate(R.layout.dialog_update_email, null);
                         EditText emailEditText = dialogView1.findViewById(R.id.emailUpdate_edit_text);
+                        EditText passwordEditText = dialogView1.findViewById(R.id.password_edit_text);
                         builder1.setView(dialogView1);
 
                         builder1.setPositiveButton("Save", (dialog1, which) -> {
                             String newEmail = emailEditText.getText().toString().trim();
-                            firebaseAuthHelper.updateEmail(newEmail);
-
+                            String password = passwordEditText.getText().toString().trim();
+                            firebaseAuthHelper.updateEmail(newEmail, password);
                         });
 
                         builder1.setNegativeButton("Cancel", null);
@@ -115,6 +115,7 @@ public class ProfileFragment extends Fragment {
                         AlertDialog dialog1 = builder1.create();
                         dialog1.show();
                         return true;
+
 
                     case R.id.update_password:
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());

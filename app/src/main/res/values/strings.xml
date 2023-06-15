@@ -9,4 +9,10 @@
     <string name="favori_list">Favori Movies</string>
     <string name="movie_count">Movie Count</string>
     <string name="movie_time">Movie Time</string>
+    <string name="new_email">New Email</string>
+    <string name="password">Password</string>
+    <string name="new_username">New Username</string>
+    <string name="current_password">Current Password</string>
+    <string name="new_password">New Password</string>
+
 </resources>
