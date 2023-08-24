@@ -2,7 +2,10 @@ package com.eakcay.watchit.data;
 
 import android.util.Log;
 
+import com.eakcay.watchit.model.Genre;
 import com.eakcay.watchit.model.MovieModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,12 +36,12 @@ public class FirestoreHelper {
                 .addOnSuccessListener(aVoid ->
                         Log.d("FirestoreHelper", "Movie added successfully: "+movieList))
                 .addOnFailureListener(e ->
-                        Log.e("FirestoreHelper", "Error adding "+movieList+" movie: " + e.getMessage()));
+                        Log.e("FirestoreHelper", "Error adding "+movieList+" movie: " +
+                                e.getMessage()));
     }
 
 
     public void removeMovie(String userId, int movieId,String movieList) {
-
         firestore.collection("Users")
                 .document(userId)
                 .collection(movieList)
@@ -46,23 +49,24 @@ public class FirestoreHelper {
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-
                         document.getReference().delete()
                                 .addOnSuccessListener(aVoid ->
-                                        Log.d("FirestoreHelper", movieList+" movie deleted. ID: "
+                                        Log.d("FirestoreHelper", movieList+
+                                                " movie deleted. ID: "
                                         + document.getId()))
                                 .addOnFailureListener(e ->
-                                        Log.e("FirestoreHelper", "Error deleting "+movieList+" movie: "
+                                        Log.e("FirestoreHelper", "Error deleting "
+                                                +movieList+" movie: "
                                         + e.getMessage()));
                     }
                 })
-                .addOnFailureListener(e -> Log.e("FirestoreHelper", "Error querying movie: "
+                .addOnFailureListener(e -> Log.e("FirestoreHelper",
+                        "Error querying movie: "
                         + e.getMessage()));
     }
 
     public void checkMovie(String userId, int movieId,String movieList,
                                    CheckMovieListener listener) {
-
         firestore.collection("Users")
                 .document(userId)
                 .collection(movieList)
@@ -76,13 +80,11 @@ public class FirestoreHelper {
                     }
                 })
                 .addOnFailureListener(e ->
-                        Log.e("FirestoreHelper", "Error querying movie: " + e.getMessage()));
+                        Log.e("FirestoreHelper", "Error querying movie: "
+                                + e.getMessage()));
     }
 
-    public interface CheckMovieListener {
-        void onMovieFound();
-        void onMovieNotFound();
-    }
+
 
     public void addUser(String email, String userID){
         DocumentReference userRef = firestore.collection("Users").document(userID);
@@ -90,10 +92,8 @@ public class FirestoreHelper {
         userData.put("email", email);
         userRef.set(userData)
                 .addOnSuccessListener(aVoid -> {
-
                 })
                 .addOnFailureListener(e -> {
-
                 });
     }
 
@@ -109,12 +109,14 @@ public class FirestoreHelper {
                         for (DocumentSnapshot document : snapshots.getDocuments()) {
                             MovieModel movie = document.toObject(MovieModel.class);
                             movies.add(movie);
-                            Log.d("FirestoreHelper", document.getId() + " => " + document.getData());
+                            Log.d("FirestoreHelper", document.getId() + " => "
+                                    + document.getData());
                         }
                         listener.onMoviesLoaded(movies);
                     } else {
                         listener.onFailure(task.getException());
-                        Log.d("FirestoreHelper", "Error getting documents: ", task.getException());
+                        Log.d("FirestoreHelper", "Error getting documents: ",
+                                task.getException());
                     }
                 });
     }
@@ -152,13 +154,47 @@ public class FirestoreHelper {
                         Log.d("FirestoreHelper", task.getResult().size() + "");
                     } else {
                         listener.onFailure(task.getException());
-                        Log.d("FirestoreHelper", "Error getting documents: ", task.getException());
+                        Log.d("FirestoreHelper", "Error getting documents: ",
+                                task.getException());
                     }
                 });
-
     }
 
+    public void getFavoriteGenresCount(String userId, GetFavoriteGenresCountListener listener) {
+        firestore.collection("Users")
+                .document(userId)
+                .collection("FavoriteMovies")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    Map<Genre, Integer> genreCounts = new HashMap<>();
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        MovieModel movie = document.toObject(MovieModel.class);
+                        if (movie != null && movie.getGenres() != null) {
+                            for (Genre genre : movie.getGenres()) {
+                                if (genreCounts.containsKey(genre)) {
+                                    genreCounts.put(genre, genreCounts.get(genre) + 1);
+                                } else {
+                                    genreCounts.put(genre, 1);
+                                }
+                            }
+                        }
+                    }
+                    listener.onFavoriteGenresCounted(genreCounts);
+                })
+                .addOnFailureListener(e -> {
+                    listener.onFailure(e);
+                    Log.e("FirestoreHelper", "Error counting favorite genres: ", e);
+                });
+    }
 
+    public interface CheckMovieListener {
+        void onMovieFound();
+        void onMovieNotFound();
+    }
+    public interface GetFavoriteGenresCountListener {
+        void onFavoriteGenresCounted(Map<Genre, Integer> genreCounts);
+        void onFailure(@NonNull Exception e);
+    }
     public interface GetCountListener{
         void onMoviesCounted(String count);
         void onFailure(@NonNull Exception e);

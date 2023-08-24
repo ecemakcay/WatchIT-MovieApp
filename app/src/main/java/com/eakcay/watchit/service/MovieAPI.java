@@ -1,9 +1,6 @@
 package com.eakcay.watchit.service;
 
-
-
 import com.eakcay.watchit.model.MovieModel;
-
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -11,7 +8,6 @@ import retrofit2.http.Query;
 
 public interface MovieAPI {
     String API_KEY = "9fc75e7de261e9b79cf9aea98daf509f";
-
     @GET("movie/popular?api_key="+API_KEY)
     Call<MovieResponse> getPopularMovies();
 
@@ -36,5 +32,6 @@ public interface MovieAPI {
     @GET("movie/{movie_id}/videos?api_key="+API_KEY)
     Call<VideoResponse> getVideos(@Path("movie_id") int movieId);
 
-
+    @GET("discover/movie?api_key="+API_KEY)
+    Call<MovieResponse> getMoviesByGenre(@Query("with_genres") int genreId);
 }

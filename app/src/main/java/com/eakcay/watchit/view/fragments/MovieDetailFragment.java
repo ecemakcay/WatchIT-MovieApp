@@ -115,36 +115,31 @@ public class MovieDetailFragment extends Fragment {
                         double voteAverage = Double.parseDouble(movie.getVoteAverage());
                         @SuppressLint("DefaultLocale") String formattedVoteAverage = String.format("%.1f", voteAverage);
                         rating.setText(formattedVoteAverage);
-
                         String release = movie.getReleaseDate();
-                        releaseDate.setText(release.substring(0, 4));
-
+                        if (release != null){
+                            releaseDate.setText(release.substring(0, 4));
+                        }else
+                            releaseDate.setText("N/A");
                         if (movie.getRuntime() != 0) {
                             runTime.setText(movie.getRuntime() + " min");
                         } else {
                             runTime.setText("Run time:  N/A");
                         }
-
                         String imageUrl = "https://image.tmdb.org/t/p/w500" + movie.getPosterPath();
                         String coverUrl = "https://image.tmdb.org/t/p/w500" + movie.getBackdropPath();
-
                         Picasso.get().load(imageUrl).into(movieDetailImg);
                         Picasso.get().load(coverUrl).into(movieCoverImg);
-
                         play_fab.setOnClickListener(view1 -> {
                             // Movie trailer
                             getVideo();
                         });
                         // Cast
                         getCast();
-
                         // Genre
                         genreAdapter.setGenreList(movie.getGenres());
-
                         checkFavoriteStatus(userId,movie);
                         checkWatchedStatus(userId,movie);
                         checkListStatus(userId,movie);
-
                         btn_favori.setOnClickListener(view12 -> {
                             if (!isFavorite) {
                                 addMovieToFavorites(userId,movie);
@@ -152,7 +147,6 @@ public class MovieDetailFragment extends Fragment {
                                 removeMovieFromFavorites(userId,movie);
                             }
                         });
-
                         btn_watched.setOnClickListener(view12 -> {
                             if (!isWatched) {
                                 addMovieToWatched(userId,movie);
@@ -160,7 +154,6 @@ public class MovieDetailFragment extends Fragment {
                                 removeMovieFromWatched(userId,movie);
                             }
                         });
-
                         btn_addList.setOnClickListener(view12 -> {
                             if (!isInList) {
                                 addMovieToList(userId,movie);
@@ -183,18 +176,13 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void addMovieToWatched(String userId, MovieModel movie) {
-
         firestoreHelper.addMovie(userId, movie,watchedMovies);
         // Update the watched status and button color after adding the movie
         isWatched = true;
         btn_watched.setBackgroundResource(R.drawable.check_yellow);
-
-
     }
 
     private void checkWatchedStatus(String userId, MovieModel movie) {
-
-
         firestoreHelper.checkMovie(userId,movie.getId(),watchedMovies,
                 new FirestoreHelper.CheckMovieListener() {
                     @Override
@@ -214,27 +202,20 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void removeMovieFromWatched(String userId, MovieModel movieModel) {
-
         firestoreHelper.removeMovie(userId,movieModel.getId(),watchedMovies);
-
         // Update the watched status and button color after removing the movie
         isWatched = false;
         btn_watched.setBackgroundResource(R.drawable.check_white);
-
     }
 
     private void addMovieToFavorites(String userId, MovieModel movie) {
-
         firestoreHelper.addMovie(userId, movie,favoriteMovies);
         // Update the watched status and button color after adding the movie
         isFavorite = true;
         btn_favori.setBackgroundResource(R.drawable.favorite_red);
-
-
     }
 
     private void checkFavoriteStatus(String userId, MovieModel movie) {
-
         FirestoreHelper firestoreHelper = new FirestoreHelper();
         firestoreHelper.checkMovie(userId,movie.getId(),favoriteMovies,
                 new FirestoreHelper.CheckMovieListener() {
@@ -257,7 +238,6 @@ public class MovieDetailFragment extends Fragment {
     private void removeMovieFromFavorites(String userId, MovieModel movieModel) {
         FirestoreHelper firestoreHelper = new FirestoreHelper();
         firestoreHelper.removeMovie(userId,movieModel.getId(),favoriteMovies);
-
         // Update the favorite status and button color after removing the movie
         isFavorite = false;
         btn_favori.setBackgroundResource(R.drawable.favorite_default);
@@ -265,17 +245,13 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void addMovieToList(String userId, MovieModel movie) {
-
         firestoreHelper.addMovie(userId, movie,userList);
         // Update the userList status and button color after adding the movie
         isInList = true;
         btn_addList.setBackgroundResource(R.drawable.save_icon);
-
-
     }
 
     private void checkListStatus(String userId, MovieModel movie) {
-
         firestoreHelper.checkMovie(userId,movie.getId(),userList,
                 new FirestoreHelper.CheckMovieListener() {
                     @Override
@@ -295,9 +271,7 @@ public class MovieDetailFragment extends Fragment {
     }
 
     private void removeMovieFromList(String userId, MovieModel movieModel) {
-
         firestoreHelper.removeMovie(userId,movieModel.getId(),userList);
-
         // Update the userList status and button color after removing the movie
         isInList = false;
         btn_addList.setBackgroundResource(R.drawable.add_white);
@@ -308,17 +282,16 @@ public class MovieDetailFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             int movieId = bundle.getInt("movie");
-
             Call<VideoResponse> call = movieAPI.getVideos(movieId);
             call.enqueue(new Callback<VideoResponse>() {
                 @Override
-                public void onResponse(@NonNull Call<VideoResponse> call, @NonNull Response<VideoResponse> response) {
+                public void onResponse(@NonNull Call<VideoResponse> call,
+                                       @NonNull Response<VideoResponse> response) {
                     if (response.body() != null) {
                         List<VideoModel> videoModels = response.body().getVideoList();
                         if (videoModels.size() > 0) {
                             String videoKey = videoModels.get(0).getKey();
                             String videoUrl = "https://www.youtube.com/watch?v=" + videoKey;
-
                             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl));
                             startActivity(intent);
                         } else {
@@ -326,7 +299,6 @@ public class MovieDetailFragment extends Fragment {
                         }
                     }
                 }
-
                 @Override
                 public void onFailure(@NonNull Call<VideoResponse> call, @NonNull Throwable t) {
                     Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
@@ -339,12 +311,12 @@ public class MovieDetailFragment extends Fragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             int movieId = bundle.getInt("movie");
-
             Call<CreditsResponse> castCall = movieAPI.getCredits(movieId);
             castCall.enqueue(new Callback<CreditsResponse>() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
-                public void onResponse(@NonNull Call<CreditsResponse> call, @NonNull Response<CreditsResponse> response) {
+                public void onResponse(@NonNull Call<CreditsResponse> call,
+                                       @NonNull Response<CreditsResponse> response) {
                     if (response.body() != null) {
                         CreditsResponse creditsResponse = response.body();
                         List<CastModel> castModels = creditsResponse.getCastList();
@@ -352,10 +324,10 @@ public class MovieDetailFragment extends Fragment {
                         castAdapter.notifyDataSetChanged();
                     }
                 }
-
                 @Override
                 public void onFailure(@NonNull Call<CreditsResponse> call, @NonNull Throwable t) {
-                    Toast.makeText(getContext(), "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Error: " + t.getMessage(),
+                            Toast.LENGTH_SHORT).show();
                 }
             });
         }

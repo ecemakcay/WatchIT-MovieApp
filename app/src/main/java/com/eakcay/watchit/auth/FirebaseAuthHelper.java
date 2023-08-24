@@ -24,7 +24,6 @@ public class FirebaseAuthHelper {
     }
 
     public void registerUser(String email, String password, String userName) {
-
         // Create user with Firebase Authentication
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
@@ -34,14 +33,12 @@ public class FirebaseAuthHelper {
                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                                 .setDisplayName(userName)
                                 .build();
-
                         assert user != null;
                         user.updateProfile(profileUpdates)
                                 .addOnCompleteListener(task1 -> {
                                     if (task1.isSuccessful()) {
                                         // Handle successful registration
                                         Toast.makeText(context, "Registration successful", Toast.LENGTH_SHORT).show();
-
                                         //Firestore add user method
                                         firestoreHelper = new FirestoreHelper();
                                         String userID= user.getUid();
@@ -61,30 +58,26 @@ public class FirebaseAuthHelper {
                                                     }
                                                 });
                                     } else {
-                                        // Handle registration failure
                                         Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     } else {
-                        // Handle registration failure
                         Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    public void loginUser(String email, String password){
 
+    public void loginUser(String email, String password){
         // Authenticate user with Firebase Authentication
         FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         // Handle successful login
                         Toast.makeText(context, "Login successful", Toast.LENGTH_SHORT).show();
-
                         Intent intent = new Intent(context, MainActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
-
                     } else {
                         // Handle login failure
                         Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT).show();
@@ -93,7 +86,6 @@ public class FirebaseAuthHelper {
     }
 
     public void forgotPassword(String email){
-
         // Send password reset email
         FirebaseAuth.getInstance().sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
@@ -101,7 +93,6 @@ public class FirebaseAuthHelper {
                         // Handle successful password reset
                         Toast.makeText(context, "Password reset email sent", Toast.LENGTH_SHORT).show();
                         ((LoginActivity) context).loadFragment(new LoginFragment());
-
                     } else {
                         // Handle password reset failure
                         Toast.makeText(context, "Failed to send password reset email", Toast.LENGTH_SHORT).show();
@@ -142,10 +133,10 @@ public class FirebaseAuthHelper {
         user.updateProfile(profileUpdates)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Kullanıcı adı başarıyla güncellendi
+
                         Toast.makeText(context, "Username updated", Toast.LENGTH_SHORT).show();
                     } else {
-                        // Güncelleme başarısız oldu
+
                         Toast.makeText(context, "Username update error", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -154,7 +145,7 @@ public class FirebaseAuthHelper {
     public void updateEmail(String email, String password) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         assert user != null;
-        String currentEmail = user.getEmail(); // Mevcut e-posta adresini al
+        String currentEmail = user.getEmail();
 
         assert currentEmail != null;
         AuthCredential credential = EmailAuthProvider.getCredential(currentEmail, password);

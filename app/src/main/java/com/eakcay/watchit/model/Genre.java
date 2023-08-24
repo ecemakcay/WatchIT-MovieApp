@@ -14,6 +14,8 @@ public class Genre implements Serializable {
     @Expose
     private String name;
 
+
+
     public int getId() {
         return id;
     }
